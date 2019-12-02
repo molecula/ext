@@ -1,4 +1,4 @@
-module github.com/pilosa/ext
+module github.com/molecula/ext
 
 go 1.13
 

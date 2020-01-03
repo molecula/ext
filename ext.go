@@ -251,8 +251,8 @@ func RegisterExtension(ext *ExtensionInfo) {
 	newExtensions = append(newExtensions, ext)
 }
 
-// NewExtentsions returns extensions that have been registered, but not previously
-// returned by Newextensions.
+// NewExtensions returns extensions that have been registered, but not previously
+// returned by NewExtensions.
 func NewExtensions() []*ExtensionInfo {
 	extMu.Lock()
 	defer extMu.Unlock()
@@ -260,4 +260,11 @@ func NewExtensions() []*ExtensionInfo {
 	ret := newExtensions
 	newExtensions = nil
 	return ret
+}
+
+// AllExtensions returns all extensions that have been registered.
+func AllExtensions() []*ExtensionInfo {
+	extMu.Lock()
+	defer extMu.Unlock()
+	return append(knownExtensions, newExtensions...)
 }

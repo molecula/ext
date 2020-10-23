@@ -60,6 +60,8 @@ type Bitmap interface {
 	// provide its own. Don't write to those bits. Offset must be a multiple
 	// of 1<<16.
 	ContainerBits(uint64, []uint64) []uint64
+	// Iterator yields a scanning iterator that goes by-container.
+	Iterator(uint64) Iterator
 
 	// These operators provide existing implemented binary ops.
 	Intersect(Bitmap) Bitmap
@@ -75,6 +77,17 @@ type Bitmap interface {
 	// imported any of the packages that have bitmap creation tools, because
 	// the bitmap wrapper type has to give you one.
 	New() Bitmap
+}
+
+// An Iterator is a quick hack to allow us to use iteration-like semantics
+// and not have to request every container whether or not it exists. This is
+// not a great interface, but this entire interface goes away in a future
+// version, and we need a placeholder to backport something.
+type Iterator interface {
+	// Next yields a key, container values, and an "ok", possibly using
+	// the provided storage rather than new storage. Don't write to the bits
+	// it returns.
+	Next([]uint64) (uint64, []uint64, bool)
 }
 
 // SignedBitmap represents a bitmap that can contain both positive and negative
